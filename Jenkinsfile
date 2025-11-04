@@ -20,7 +20,7 @@ pipeline {
 
     stages{
 
-        stage('Job Starting') {
+        stage('Job Start') {
             steps{
                 echo 'Jenkins Job Started'
             }
