@@ -30,6 +30,16 @@ pipeline {
                 sh 'mvn -s settings.xml -DskipTests install'
             }
         }
+        stage("Unit Test") {
+            steps {
+                sh 'mvn -s settings.xml test'
+            }
+        }
+        stage("Code Analysis - Check Style") {
+            steps {
+                sh 'mvn -s settings.xml checkstyle:checkstyle'
+            }
+        }
     }
 
 
