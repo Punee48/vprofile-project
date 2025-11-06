@@ -55,7 +55,7 @@ pipeline {
                     -Dsonar.sources=src/ \
                     -Dsonar.java.binaries=target/test-classes/com/visualpathit/account/controllerTest/ \
                     -Dsonar.jacoco.reportPaths=target/jacoco.exec \
-                    -Dsonar.junit.reportPaths=target/surfire-reports/ \ 
+                    -Dsonar.junit.reportPaths=target/surfire-reports/ \
                     -Dsonar.java.checkstyle.reportPaths=target/checkstyle-results.xml'''
                 }
             }
