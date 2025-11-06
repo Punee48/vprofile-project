@@ -85,7 +85,7 @@ pipeline {
                     repository: "${RELEASE_REPO}",
                     credentialsId: "${NEXUSLOGIN}",
                     groupId: 'QA',
-                    version: "${env.BUILD_ID}-${env.BUILD_TIMESTAMP}"
+                    version: "${env.BUILD_ID}-${env.BUILD_TIMESTAMP}",
                     artifacts: [
                         [
                             artifactId: 'vprofileapp',
