@@ -79,7 +79,7 @@ pipeline {
         stage("Deploy the Artifact to Nexus Repos") {
             steps {
                 nexusArtifactUploader(
-                    nexusVersion: 'nexus3'
+                    nexusVersion: 'nexus3',
                     protocol: 'http',
                     nexusUrl: "${NEXUSIP}:${NEXUSPORT}",
                     repository: "${RELEASE_REPO}"
