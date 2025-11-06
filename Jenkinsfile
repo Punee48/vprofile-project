@@ -50,7 +50,7 @@ pipeline {
             steps {
                 withSonarQubeEnv("${SONARQUBE_SERVER}") {
                     sh '''${SONARSCANNER_HOME}/bin/sonar-scanner -Dsonar.projectkey=vprofile \
-                    -Dsonar.projectName=VProfile \
+                    -Dsonar.projectName=VProfile_Test \
                     -Dsonar.projectVersion=1.0 \
                     -Dsonar.sources=src/ \
                     -Dsonar.java.binaries=target/test-classes/com/visualpathit/account/controllerTest/ \
