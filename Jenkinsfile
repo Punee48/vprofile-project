@@ -82,9 +82,9 @@ pipeline {
                     nexusVersion: 'nexus3',
                     protocol: 'http',
                     nexusUrl: "${NEXUSIP}:${NEXUSPORT}",
-                    repository: "${RELEASE_REPO}"
+                    repository: "${RELEASE_REPO}",
                     credentialsId: "${NEXUSLOGIN}",
-                    groupId: 'QA'
+                    groupId: 'QA',
                     version: "${env.BUILD_ID}-${env.BUILD_TIMESTAMP}"
                     artifacts: [
                         [
