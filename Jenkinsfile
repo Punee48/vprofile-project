@@ -32,6 +32,13 @@ pipeline {
             steps {
                 sh 'mvn -s settings.xml -DskipTests install'
             }
+            // Once Build is Successful Archive the Artifact .war file
+            post{
+                success {
+                    echo(message: 'Build Successful, Archiving the Artifacts')
+                    archiveArtifacts artifacts: '**/*.war'
+                }
+            }
         }
         stage("Unit Test") {
             steps {
@@ -67,6 +74,27 @@ pipeline {
                 timeout(time: 1, unit: 'MINUTES') {
                     waitForQualityGate(abortPipeline: true)
                 }
+            }
+        }
+        stage("Deploy the Artifact to Nexus Repos") {
+            steps {
+                nexusArtifactUploader(
+                    nexusVersion: 'nexus3'
+                    protocol: 'http',
+                    nexusUrl: "${NEXUSIP}:${NEXUSPORT}",
+                    repository: "${RELEASE_REPO}"
+                    credentialsId: "${NEXUSLOGIN}",
+                    groupId: 'QA'
+                    version: "${env.BUILD_ID}-${env.BUILD_TIMESTAMP}"
+                    artifacts: [
+                        [
+                            artifactId: 'vprofileapp',
+                            classifier: '',
+                            file: 'target/vprofile-v2.war',
+                            type: 'war'
+                        ]
+                    ]
+                )
             }
         }
     }
