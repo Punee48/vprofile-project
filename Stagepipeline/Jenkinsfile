@@ -105,7 +105,7 @@ pipeline {
             steps {
                 script {
                     // # Using Docker build (ImageName: JenkinsBuildNumber, Docker file path)
-                    dockerImage = docker.build( REGISTRY_APPIMG + ":$BUILD_NUMBER", ".") 
+                    dockerImage = docker.build( "${REGISTRY_APPIMG}" + ":$BUILD_NUMBER", ".") 
                 }
             }
         }
