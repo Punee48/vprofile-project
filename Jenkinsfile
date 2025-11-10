@@ -21,7 +21,7 @@ pipeline {
         SONARSCANNER = 'SonarQubeScanner'
     }
 
-    stages{
+    stages {
 
         stage('Job Start') {
             steps{
@@ -33,7 +33,7 @@ pipeline {
                 sh 'mvn -s settings.xml -DskipTests install'
             }
             // Once Build is Successful Archive the Artifact .war file
-            post{
+            post {
                 success {
                     echo(message: 'Build Successful, Archiving the Artifacts')
                     archiveArtifacts artifacts: '**/*.war'
@@ -64,6 +64,7 @@ pipeline {
                     -Dsonar.jacoco.reportPaths=target/jacoco.exec \
                     -Dsonar.junit.reportPaths=target/surefire-reports/ \
                     -Dsonar.java.checkstyle.reportPaths=target/checkstyle-results.xml'''
+                    
                 }
             }
         }
@@ -95,9 +96,7 @@ pipeline {
                         ]
                     ]
                 )
-            }
+            }       
         }
     }
-
-
 }
