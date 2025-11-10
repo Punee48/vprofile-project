@@ -19,6 +19,9 @@ pipeline {
         SONARQUBE_SERVER = 'SonarQube_Server'
         SONARQUBE_LOGIN = 'SonarCred'
         SONARSCANNER = 'SonarQubeScanner'
+        REGISTRYCREDENTIALS = 'ecr:ap-south-1:aws-jenkins'
+        REGISTRY_APPIMG = '565601886809.dkr.ecr.ap-south-1.amazonaws.com/vprofile-app'
+        REGISTRYURL = 'https://565601886809.dkr.ecr.ap-south-1.amazonaws.com'
     }
 
     stages {
@@ -97,6 +100,25 @@ pipeline {
                     ]
                 )
             }       
+        }
+        stage("Build Application Image") {
+            steps {
+                script {
+                    // # Using Docker build (ImageName: JenkinsBuildNumber, Docker file path)
+                    dockerImage = docker.build( REGISTRY_APPIMG + ":$BUILD_NUMBER", "./Dockerfile") 
+                }
+            }
+        }
+        stage("Upload the Image to the ECR") {
+            steps {
+                script {
+                    docker.withRegistry(REGISTRYURL, REGISTRYCREDENTIALS) {
+                        dockerImage.push("$BUILD_NUMBER") //Pushing the Docker image with the build number of jenkins
+                        dockerImage.push("latest") //Pushing the Docker image with the word latest
+                    }
+                }
+
+            }
         }
     }
 }
