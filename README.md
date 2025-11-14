@@ -2,6 +2,7 @@
 #
 - JDK 17 or 21
 - Maven 3.9
+- Nexus 
 - MySQL 8
 
 # Technologies 
