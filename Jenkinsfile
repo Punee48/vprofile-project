@@ -2,7 +2,7 @@ pipeline {
     agent any 
 
     // Mention the Tools 
-    tools {
+    tools{
         maven 'MAVEN_TOOL'
         java 'JAVA_TOOL'
     }
@@ -22,7 +22,7 @@ pipeline {
 
     // Stages
 
-    Stages {
+    stages {
         stage('Build Application') {
             steps {
                 sh 'mvn -s settings.xml -DskipTests install'
