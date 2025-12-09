@@ -9,8 +9,8 @@ pipeline {
 
     // Set the environment variable for Nexus to interact
     environment {
-        NEXUS_USER = admin
-        NEXUS_PASSWORD = admin123
+        NEXUS_USER = 'admin'
+        NEXUS_PASSWORD = 'admin123'
         CENTRAL_REPO = 'vpro-maven-central'
         SNAP_REPO = 'vprofile-snapshot'
         RELEASE_REPO = 'vprofile-release'
