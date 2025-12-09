@@ -4,7 +4,7 @@ pipeline {
     // Mention the Tools 
     tools{
         maven 'MAVEN_TOOL'
-        java 'JAVA_TOOL'
+        jdk 'JAVA_TOOL'
     }
 
     // Set the environment variable for Nexus to interact
