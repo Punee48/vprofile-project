@@ -1,8 +1,7 @@
 pipeline {
     // Agent we will use any Agent Node in the Jenkins to run this pipeline
-    agent {
-        any  
-    }
+    agent any
+
 
     tools {
         // Mention the Tool configured in the Jenkins Server like Java, Maven, Git 
