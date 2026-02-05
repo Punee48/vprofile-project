@@ -48,3 +48,19 @@ When your running jenkins Job for the First Time, Jenkins will use SSH Key to au
 - Add Stage for the Application for Maven test and check style
 
 - In Build Stage add a Post section to save the war file in the artifacts
+
+---
+
+## Code Analysis and Sonar Qube
+
+- Run the Jenkins File and Target Folder will be created in this folder all war file, checkstyle report will be present. 
+
+- We need to upload this report to the Sonar Qube Server to check it 
+
+- In Tools add SonarQube Scanner  and select the version
+
+- In Jenkins System, Add the Sonar Qube Server URL (Private Key) and Token (Create a Credentials to store the Token)
+
+- In SonarQube, Create a Token (Administration -> Token)
+
+- Write a Code in the Pipeline (Refer Documentation)

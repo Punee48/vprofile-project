@@ -21,6 +21,8 @@ pipeline {
         NEXUSIP = '172.31.32.231'
         NEXUSPORT = '8081'
         NEXUS_LOGIN = 'NEXUS_CREDENTIALS'
+        SONAR_SCANNER = 'sonarscanner'
+        SONAR_SERVER_LOGIN = 'sonarserver'
 
     }
 
@@ -48,6 +50,25 @@ pipeline {
         stage ('CheckStyle for the Application') {
             steps {
                 sh 'mvn checkstyle:checkstyle'
+            }
+        }
+
+        // Upload Report to the Sonar Server to check the Vulnerability. Refer Documentation for code
+        stage ('Sonar Qube Analysis') {
+                environment {
+                    scannerhome = tool "${SONAR_SCANNER}" // Mention the name used while configuring sonarscanner in the jenkins tools 
+                }
+            steps {
+                withSonarQubeEnv("${SONAR_SERVER_LOGIN}") {
+                    sh '''${scannerhome}/bin/sonar-scanner -Dsonar.projectKey=vprofile \
+                   -Dsonar.projectName=vprofile-repo \
+                   -Dsonar.projectVersion=1.0 \
+                   -Dsonar.sources=src/ \
+                   -Dsonar.java.binaries=target/test-classes/com/visualpathit/account/controllerTest/ \
+                   -Dsonar.junit.reportsPath=target/surefire-reports/ \
+                   -Dsonar.jacoco.reportsPath=target/jacoco.exec \
+                   -Dsonar.java.checkstyle.reportPaths=target/checkstyle-result.xml'''
+                } 
             }
         }
 
