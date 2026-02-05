@@ -29,6 +29,27 @@ pipeline {
             steps {
                 sh 'mvn -s settings.xml -DskipTests install' // Run Install and use setting.xml file and skip unit test
             }
+            post {
+                success {
+                    echo 'Now Archiving'
+                    archiveArtifacts artifacts: '**/*.war'
+                }
+            }
         }
+
+        // Test Application
+        stage ('Test Application') {
+            steps {
+                sh 'mvn test'
+            }
+        }
+
+        // Check Style Application for Vulnerability scan
+        stage ('CheckStyle for the Application') {
+            steps {
+                sh 'mvn checkstyle:checkstyle'
+            }
+        }
+
     }
 }
