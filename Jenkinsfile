@@ -27,7 +27,7 @@ pipeline {
     stages {
         stage ('Build Applications') {
             steps {
-                sh 'mvn -s settings.xml DskipTests install' // Run Install and use setting.xml file and skip unit test
+                sh 'mvn -s settings.xml -DskipTests install' // Run Install and use setting.xml file and skip unit test
             }
         }
     }
