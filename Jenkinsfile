@@ -2,21 +2,15 @@ pipeline {
     // Agent we will use any Agent Node in the Jenkins to run this pipeline
     agent any
 
-    tools {
-        // Mention the Tool configured in the Jenkins Server like Java, Maven, Git 
-        maven 'Maven_Tool'
-        jdk 'Java_Tool'
-    }
-
     // Set Environment Variable for the Nexus to interact to download the dependencies and upload artifacts in the Nexus
     environment {
 
-        NEXUS_USER = 'admin'
-        NEXUS_PASS = 'admin'
+        // NEXUS_USER = 'admin'
+        // NEXUS_PASS = 'admin'
         RELEASE_REPO = 'vprofile-release'
-        CENTRAL_REPO = 'vprofile-maven-central'
-        SNAP_REPO = 'vprofile-snapshot'
-        NEXUS_GRP_REPO = 'vprofile-maven-group'
+        // CENTRAL_REPO = 'vprofile-maven-central'
+        // SNAP_REPO = 'vprofile-snapshot'
+        // NEXUS_GRP_REPO = 'vprofile-maven-group'
         NEXUSIP = '172.31.32.231'
         NEXUSPORT = '8081'
         NEXUS_LOGIN = 'NEXUS_CREDENTIALS'
@@ -27,84 +21,23 @@ pipeline {
     }
 
     stages {
-        stage('Build Applications') {
+
+        // SETUP Paarameter
+        stage('Setup Paramteres') {
             steps {
-                sh 'mvn -s settings.xml -DskipTests install' // Run Install and use setting.xml file and skip unit test
-            }
-            post {
-                success {
-                    echo 'Now Archiving'
-                    archiveArtifacts artifacts: '**/*.war'
+                script {
+                    properties([
+                        parameters([
+                            string(defaultValue: '', description: 'Enter the Build Number From Nexus Repos', name: 'BUILD'),
+                            string(defaultValue: '', description: 'Enter the Time Stamp of the Artifacts', name: 'TIME'),
+                        ])
+                    ])
                 }
             }
         }
 
-        // Test Application
-        stage('Test Application') {
-            steps {
-                sh 'mvn test'
-            }
-        }
-
-        // Check Style Application for Vulnerability scan
-        stage('CheckStyle for the Application') {
-            steps {
-                sh 'mvn checkstyle:checkstyle'
-            }
-        }
-
-        // Upload Report to the Sonar Server to check the Vulnerability. Refer Documentation for code
-        stage('Sonar Qube Analysis') {
-            environment {
-                    scannerhome = tool "${SONAR_SCANNER}" // Mention the name used while configuring sonarscanner in the jenkins tools 
-                    // ADD THIS LINE BELOW to fix the Java 17 error
-                    
-                    SONAR_SCANNER_OPTS = "--add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.util=ALL-UNNAMED --add-opens java.base/java.lang.reflect=ALL-UNNAMED"
-                }
 
 
-            steps {
-                withSonarQubeEnv("${SONAR_SERVER_LOGIN}") {
-                    sh '''${scannerhome}/bin/sonar-scanner -Dsonar.projectKey=vprofile \
-                   -Dsonar.projectName=vprofile-repo \
-                   -Dsonar.projectVersion=1.0 \
-                   -Dsonar.sources=src/ \
-                   -Dsonar.java.binaries=target/test-classes/com/visualpathit/account/controllerTest/ \
-                   -Dsonar.junit.reportsPath=target/surefire-reports/ \
-                   -Dsonar.jacoco.reportsPath=target/jacoco.exec \
-                   -Dsonar.java.checkstyle.reportPaths=target/checkstyle-result.xml'''
-                } 
-            }
-        }
-        stage('Validate Quality Gates') {
-            steps {
-                //timeout is 1 hrs
-                timeout(time: 1, unit: 'HOURS') {
-                    waitForQualityGate abortPipeline: true
-                }
-            }
-        }
-
-        // Upload Artifacts to the Nexus Repos
-        stage('Upload Artifacts') {
-            steps {
-                nexusArtifactUploader(
-                    nexusVersion: 'nexus3',
-                    protocol: 'http',
-                    nexusUrl: "${NEXUSIP}:${NEXUSPORT}",
-                    groupId: 'QA',
-                    version: "${env.BUILD_ID}-${env.BUILD_TIMESTAMP}",
-                    repository: "${RELEASE_REPO}",
-                    credentialsId: "${NEXUS_LOGIN}",
-                    artifacts: [
-                        [artifactId: 'vproapp',
-                        classifier: '',
-                        file: 'target/vprofile-v2.war',
-                        type: 'war']
-                    ]
-                )
-            }
-        }
 
         stage('Ansible Deployment in App Stagging Server') {
             steps {
@@ -122,9 +55,11 @@ pipeline {
                     nexusip: "${NEXUSIP}",
                     reponame: 'vprofile-release',
                     groupid: 'QA',
-                    time: "${env.BUILD_TIMESTAMP}",
-                    build: "${env.BUILD_ID}",
-                    vprofile_version: "${env.BUILD_ID}-${env.BUILD_TIMESTAMP}",
+                    time: "${env.TIME}", // Time is the variable. Input will receive from the User 
+                    
+                    // Build is the variable. Input will receive from the User 
+                    build: "${env.BUILD}",
+                    vprofile_version: "${env.BUILD}-${env.TIME}",
                     artifactId: 'vproapp'
 
                 ]
