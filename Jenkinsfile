@@ -59,7 +59,7 @@ pipeline {
                     
                     // Build is the variable. Input will receive from the User 
                     build: "${env.BUILD}",
-                    vprofile_version: "${env.BUILD}-${env.TIME}",
+                    vprofile_version: "vproapp-${env.BUILD}-${env.TIME}.war",
                     artifactId: 'vproapp'
 
                 ]
@@ -75,7 +75,7 @@ pipeline {
             emailext (
                 body: """<p>Jenkins Build Status: <b>${currentBuild.currentResult}</b></p>
                          <p>Job Name: ${env.JOB_NAME}</p>
-                         <p>Build Number: ${env.BUILD_NUMBER}</p>
+                         <p>Build Number: ${env.BUILD}</p>
                          <p>Check console output at: <a href='${env.BUILD_URL}'>${env.BUILD_URL}</a></p>""",
                 subject: "Jenkins Build ${currentBuild.currentResult}: Job ${env.JOB_NAME} | ${env.BUILD_NUMBER}", 
                 to: 'puneethkumar482000@gmail.com'
