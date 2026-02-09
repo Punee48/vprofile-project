@@ -50,7 +50,7 @@ pipeline {
                     
                     // Build is the variable. Input will receive from the User 
                     build: "${params.BUILD}",
-                    vprofile_version: "vproapp-${params.BUILD}-${params.TIME}.war",
+                    vprofile_version: "${params.BUILD}-${params.TIME}",
                     artifactId: 'vproapp'
 
                 ]
