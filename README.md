@@ -26,41 +26,42 @@ sql dump file:
 
 ---
 
-## Github SSH Issue
+## Jenkins Configuartion
 
-When your running jenkins Job for the First Time, Jenkins will use SSH Key to authenticate to Github to pull the code.
+* We need to install Plugin for Docker, AWS and add credentials of the IAM User to connect to AWS
 
-- Switch to the Jenkins User `sudo su - jenkins `
-- Run COmmand `ssh -T git@github.com `
+  - Docker Pipeline 
+  - CloudBees Docker Build and Publish
+  - ECR
+  - AWS Pipeline 
 
----
+* Add Credentials of the IAM User --> KIND: AWS Cred -> Paste the Access Key and Secret Access Key
 
-## Github Webhook
+* Login to the Jenkins Server 
 
-- When we commit a code in the main branch in the repos then jenkins should trigger the Job Automatically. So we need to use Webhook in Git
+* Install aws cli in the server 
 
-- Add Public Ip address of Jenkins /github-webhook/
+* Install Docker Engine in the Server 
 
-- In real time, we will use EIP or Load Balancer
+*  Test if the docker is running
 
-- In Job we need to ensure trigger is enabled in the jenkins job configuration 
-
-- Add Stage for the Application for Maven test and check style
-
-- In Build Stage add a Post section to save the war file in the artifacts
+* Provide Docker permission to Jenkins User by adding jenkins to the docker group 
 
 ---
 
-## Code Analysis and Sonar Qube
 
-- Run the Jenkins File and Target Folder will be created in this folder all war file, checkstyle report will be present. 
+## Docker Build in Pipeline
 
-- We need to upload this report to the Sonar Qube Server to check it 
+Build Docker Image for the Application and upload to the ECR
 
-- In Tools add SonarQube Scanner  and select the version
+- Start All Instance and run the trigger the Job
 
-- In Jenkins System, Add the Sonar Qube Server URL (Private Key) and Token (Create a Credentials to store the Token)
+- Write a Docker file for App
 
-- In SonarQube, Create a Token (Administration -> Token)
+- Write a Stage to Upload the Docker image to the ECR
 
-- Write a Code in the Pipeline (Refer Documentation)
+- Create a Variable to store AWS Account, registryCredentials, AppRegistry, vprofileRegistry
+
+- Write two stage for Build the Docker Image and Upload the App Image
+
+- Create a new pipeline and mention the Git Information to use the JenkinsFile

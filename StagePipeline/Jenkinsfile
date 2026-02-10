@@ -22,6 +22,10 @@ pipeline {
         NEXUS_LOGIN = 'NEXUS_CREDENTIALS'
         SONAR_SCANNER = 'sonarqubescanner'
         SONAR_SERVER_LOGIN = 'sonarserver'
+        AWS_ACCOUNT_ID = '115246381799'
+        registryCredentials = 'ecr:ap-south-1:AWS_CRED' // JEnkins will use this credential to login to the AWS ECR and push the docker image
+        appRegistry = '115246381799.dkr.ecr.ap-south-1.amazonaws.com/vprofileappimg' // ECR Registry where we will push the docker image
+        vprofileAppImg = 'https://115246381799.dkr.ecr.ap-south-1.amazonaws.com'  
 
     }
 
@@ -102,6 +106,28 @@ pipeline {
                         type: 'war']
                     ]
                 )
+            }
+        }
+
+        // Build Docker File
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    dockerImage = docker.build("${appRegistry}-${BUILD_NUMBER}", "./Docker-files/app/multistage/") // Build the Docker Image. Using Plugin we have used docker with build method and this method has two argument 1st Name of the Image and Second path of the DockerFile
+                }
+            }
+        }
+
+        // Upload Docker Image to the AWS ECR
+        stage('Upload Docker Image') {
+            steps {
+                script {
+                    docker.withRegistry(vprofileAppImg, registryCredentials) // Login to the AWS ECR using the credentials configured in the jenkins and using the URL of the ECR registry
+                    {
+                        dockerImage.push("BUILD_NUMBER") // Push the docker image to the ECR with Tag
+                        dockerImage.push("Latest")
+                    }
+                }
             }
         }
     }
