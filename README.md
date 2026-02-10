@@ -234,3 +234,5 @@ Write a Jenkins File code to run the playbook
 - In Ansible Deploy Stage add a Variable to get the input from user
 
 - Create a new Job in the Jenkins and mention the JenkinsFile Path in the Git
+
+---
