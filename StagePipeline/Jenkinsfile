@@ -25,7 +25,9 @@ pipeline {
         AWS_ACCOUNT_ID = '115246381799'
         registryCredentials = 'ecr:ap-south-1:AWS_CRED' // JEnkins will use this credential to login to the AWS ECR and push the docker image
         appRegistry = '115246381799.dkr.ecr.ap-south-1.amazonaws.com/vprofileappimg' // ECR Registry where we will push the docker image
-        vprofileAppImg = 'https://115246381799.dkr.ecr.ap-south-1.amazonaws.com'  
+        vprofileAppImg = 'https://115246381799.dkr.ecr.ap-south-1.amazonaws.com' 
+        ecs_cluster = 'my-ecs-cluster'
+        ecs_service = 'my-ecs-service' 
 
     }
 
@@ -127,6 +129,15 @@ pipeline {
                         dockerImage.push("BUILD_NUMBER") // Push the docker image to the ECR with Tag
                         dockerImage.push("Latest")
                     }
+                }
+            }
+        }
+
+        // Deploy Docker Image to the ECS Service
+        stage('Deploy to ECS Service') {
+            steps {
+                withAWS(credentials: 'AWS_CRED', region: 'ap-south-1') {
+                    sh 'aws ecs update-service --cluster ${ecs_cluster} --service ${ecs_service} --force-new-deployment' //New image tag latest will pull and deploy to the ECS Service. 
                 }
             }
         }

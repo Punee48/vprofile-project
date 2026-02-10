@@ -65,3 +65,53 @@ Build Docker Image for the Application and upload to the ECR
 - Write two stage for Build the Docker Image and Upload the App Image
 
 - Create a new pipeline and mention the Git Information to use the JenkinsFile
+
+---
+
+## AWS ECS Setup
+
+We will host the Application conatiner using Docker Image in the Elastic Container Service
+
+- Open AWS -> ECS Service
+
+- Create a CLuster
+  * AWS Fargate 
+  * Monitoring : Container Insight
+  * Submit
+  * Create a Task Defination
+  * Select OS, CPU, Memory
+  * Container and paste the url of the ECR Image
+  * Mention Port 8080
+  * In Cluster Create a Service for AutoScaling, Deployment 
+  * Create SG for HTTP, 8080
+  * Enable Load Balancer
+
+---
+
+## Pipeline for ECS
+
+- Ensure Cluster Service is up and running
+
+- In Pipeline save the variable of the cluster and service
+
+- Create a new stage 
+
+
+---
+
+## Promote to Prod
+
+In Previous Steps we have deployed the docker image to the Cluster where testing team will perform testing for the application. Once it is approved by them and gave signal to deploy in Prod. We need to create a new cluster in ecs
+
+
+- Use the same Task Definition where we have configure the docker image with port 
+
+- In Cluster create a service and attach the task definition, Set ASG, SG PORT 80,8080 (AnyWhere)
+
+- Create a new jenkins pipeline for the Production
+
+- Create a new Branch for Production. 
+
+- Remove Testing Stage in the Jenkins File and add only deploy stage 
+
+- Create a new Pipeline and configure the git branch, URL and Credentials 
