@@ -113,7 +113,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    dockerImage = docker.build("${appRegistry}-${BUILD_NUMBER}", "./Docker-files/app/multistage/") // Build the Docker Image. Using Plugin we have used docker with build method and this method has two argument 1st Name of the Image and Second path of the DockerFile
+                    dockerImage = docker.build( appRegistry + ":${BUILD_NUMBER}", "./Docker-files/app/multistage/") // Build the Docker Image. Using Plugin we have used docker with build method and this method has two argument 1st Name of the Image and Second path of the DockerFile
                 }
             }
         }
